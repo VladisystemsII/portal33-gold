@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Publica Tu Propiedad - Portal33</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Publica tu propiedad con Portal33. Te acompañamos en todo el proceso de comercialización en la zona norte de Bogotá.">
+  <meta property="og:title" content="Publica Tu Propiedad - Portal33">
+  <meta property="og:description" content="Deja tus datos y tu propiedad estará en nuestro catálogo en pocos días.">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── captacion.css ──────────────────────────────────────────
+       Estilos específicos del módulo de captación.
+       Pendiente: mover a captacion.css cuando se separe por archivos.
+    ────────────────────────────────────────────────────────── */
+
+    .captura-cliente {
+      padding: 50px 20px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      margin: 50px auto;
+      max-width: 900px;
+    }
+
+    .captura-cliente h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      color: #1a1a1a;
+    }
+
+    .lista-pasos {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .lista-pasos ol {
+      padding-left: 20px;
+    }
+
+    /* CTA antes del formulario */
+    .cta-form-top {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .cta-form-top button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .cta-form-top button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Formulario embebido */
+    .form-google {
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 60px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER cargado dinámicamente desde header.html -->
+  <div id="header-container"></div>
+
+  <!-- MÓDULO PUBLICA TU PROPIEDAD -->
+  <section id="publica-tu-propiedad" class="captura-cliente">
+    <h2>Publica tu propiedad</h2>
+
+    <!-- PASOS DEL PROCESO -->
+    <div class="lista-pasos">
+      <p>Para comercializar tu propiedad con nosotros, sigue estos pasos:</p>
+      <ol>
+        <li>Completa el formulario con los datos de tu propiedad.</li>
+        <li>Nos pondremos en contacto contigo para formalizar la comercialización.</li>
+        <li>Tu propiedad será incorporada a nuestro catálogo en pocos días.</li>
+        <li>Acompañamiento continuo hasta el cierre del negocio.</li>
+      </ol>
+    </div>
+
+    <!-- BOTÓN CTA — lleva al formulario -->
+    <div class="cta-form-top">
+      <button id="scrollToForm">Comenzar ahora</button>
+    </div>
+
+    <!-- FORMULARIO GOOGLE FORM EMBEBIDO -->
+    <div class="form-google">
+      <iframe
+        id="googleForm"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSchpVm-85aOhPa_n76HtO9T1RFZ9RhJkhi8hoaRgoRHj2ptUw/viewform?usp=sf_link"
+        width="100%"
+        height="800"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="Formulario de captación de propiedades Portal33">
+        Cargando formulario...
+      </iframe>
+    </div>
+
+  </section>
+
+  <!-- FOOTER cargado dinámicamente desde footer.html -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts de módulos -->
+  <script src="js/header-loader.js"></script>
+  <script src="js/footer-loader.js"></script>
+  <script src="menu-mobile.js"></script>
+
+  <!-- Scroll al formulario -->
+  <script>
+    document.getElementById("scrollToForm").addEventListener("click", function () {
+      document.getElementById("googleForm").scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+
+</body>
+</html>
