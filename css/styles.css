@@ -125,18 +125,30 @@ header {
   font-weight: 500;
 }
 
-.menu a:hover {
-  color: var(--color-black);
-}
-
-.menu a.active::after {
+/* Base de la rayita — invisible por defecto, se anima en hover y active */
+.menu a::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100%;
+  width: 0;
   height: 2px;
   background: var(--color-black);
+  transition: width 0.3s ease;
+}
+
+/* Hover — rayita se despliega de izquierda a derecha */
+.menu a:hover {
+  color: var(--color-black);
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* Active — rayita siempre visible en la página actual */
+.menu a.active::after {
+  width: 100%;
 }
 
 /* =======================================
