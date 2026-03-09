@@ -56,8 +56,8 @@ async function cargarPropiedad() {
     const data = await response.json();
 
     const propiedad = data.find(p =>
-      p["codigo"]?.trim() === codigo.trim() &&
-      String(p["activo (si/no)"]).toLowerCase() === "si"
+      p["CÓDIGO"]?.trim() === codigo.trim() &&
+      String(p["Activo (si/no)"]).toLowerCase() === "si"
     );
 
     if (!propiedad) {
@@ -78,31 +78,31 @@ async function cargarPropiedad() {
 // ===== RENDERIZAR =====
 function renderizarPropiedad(prop) {
   // Título y ubicación
-  document.getElementById('propTitulo').textContent = prop["titulo"] || "Sin título";
-  const ciudad = prop["ciudad"] || "";
-  const barrio = prop["barrio/sector"] || "";
+  document.getElementById('propTitulo').textContent = prop["  Título  "] || "Sin título";
+  const ciudad = prop["Ciudad"] || "";
+  const barrio = prop["Barrio/Sector"] || "";
   document.getElementById('propUbicacion').textContent =
     `${ciudad}${barrio ? ', ' + barrio : ''}`;
 
   // Tipo
-  const tipo = prop["tipo"] || "Propiedad";
-  const clasificacion = prop["residencial / comercial"] || "";
+  const tipo = prop["Tipo"] || "Propiedad";
+  const clasificacion = prop["Residencial / Comercial"] || "";
   document.getElementById('propTipo').textContent = `${tipo} ${clasificacion}`.trim();
 
   // Características
-  document.getElementById('propArea').textContent         = prop["area m2"] || "0";
-  document.getElementById('propHabitaciones').textContent = prop["habitaciones"] || "0";
-  document.getElementById('propBanos').textContent        = prop["banos"] || "0";
-  document.getElementById('propParqueaderos').textContent = prop["parqueaderos"] || "0";
+  document.getElementById('propArea').textContent         = prop["Área m2"] || "0";
+  document.getElementById('propHabitaciones').textContent = prop["Habitaciones"] || "0";
+  document.getElementById('propBanos').textContent        = prop["Baños"] || "0";
+  document.getElementById('propParqueaderos').textContent = prop["Parqueaderos"] || "0";
 
   // Descripción
   document.getElementById('propDescripcion').textContent =
-    prop["descripcion"] || "Sin descripción disponible.";
+    prop["Descripción"] || "Sin descripción disponible.";
 
   // Precios
-  const estado      = prop["estado"] || "";
-  const pVenta      = prop["precio venta cop"] || "";
-  const pArriendo   = prop["precio arriendo cop"] || "";
+  const estado      = prop["Estado"] || "";
+  const pVenta      = prop["Precio Venta COP"] || "";
+  const pArriendo   = prop["Precio Arriendo COP"] || "";
 
   if (estado.includes("Venta") && pVenta) {
     document.getElementById('propPrecioVenta').textContent  = pVenta;
@@ -121,17 +121,17 @@ function renderizarPropiedad(prop) {
   }
 
   // Detalles extra
-  document.getElementById('propEstrato').textContent        = prop["estrato"] || "-";
-  document.getElementById('propAdministracion').textContent = prop["administracion"] || "-";
-  document.getElementById('propClasificacion').textContent  = prop["residencial / comercial"] || "-";
+  document.getElementById('propEstrato').textContent        = prop["Estrato"] || "-";
+  document.getElementById('propAdministracion').textContent = prop["Administración"] || "-";
+  document.getElementById('propClasificacion').textContent  = prop["Residencial / Comercial"] || "-";
 
   // Galería
   cargarGaleria(prop);
 
   // WhatsApp
   document.getElementById('btnWhatsapp').onclick = () => {
-    const titulo   = prop["titulo"] || "esta propiedad";
-    const codProp  = prop["codigo"] || "";
+    const titulo   = prop["  Título  "] || "esta propiedad";
+    const codProp  = prop["CÓDIGO"] || "";
     const mensaje  = `Hola! Estoy interesado en la propiedad *${codProp}*: ${titulo}`;
     window.open(
       `https://wa.me/${PORTAL33_CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`,
@@ -145,7 +145,7 @@ function cargarGaleria(prop) {
   const fotosArray = [];
 
   for (let i = 1; i <= 8; i++) {
-    const url = prop[`foto ${i}`];
+    const url = prop[`Foto ${i}`];
     if (!url || url.trim() === '') continue;
     const normalizada = normalizarFoto(url);
     if (normalizada) fotosArray.push(normalizada);
