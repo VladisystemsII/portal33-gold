@@ -364,8 +364,7 @@
 
   <div id="header-container"></div>
 
-  <!-- iframe oculto para recibir respuesta de Google Forms sin redirigir -->
-  <iframe name="hidden-form-target" style="display:none;"></iframe>
+
 
   <div class="captacion-page">
 
@@ -404,9 +403,6 @@
 
         <form
           id="captacion-form"
-          action="https://docs.google.com/forms/d/e/1FAIpQLSchpVm-85aOhPa_n76HtO9T1RFZ9RhJkhi8hoaRgoRHj2ptUw/formResponse"
-          method="POST"
-          target="hidden-form-target"
           onsubmit="handleSubmit(event)">
 
           <!-- Campo oculto del sistema -->
@@ -506,13 +502,29 @@
 
   <script>
     function handleSubmit(e) {
+      e.preventDefault();
+
       const btn = document.getElementById("submit-btn");
       btn.disabled = true;
       btn.innerHTML = '<span>Enviando...</span>';
-      setTimeout(() => {
+
+      const form = document.getElementById("captacion-form");
+      const data = new FormData(form);
+      const params = new URLSearchParams(data).toString();
+
+      fetch("https://docs.google.com/forms/d/e/1FAIpQLSchpVm-85aOhPa_n76HtO9T1RFZ9RhJkhi8hoaRgoRHj2ptUw/formResponse", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params
+      }).then(() => {
         document.getElementById("form-wrapper").style.display = "none";
         document.getElementById("form-success").classList.add("visible");
-      }, 2000);
+      }).catch(() => {
+        // no-cors siempre resuelve aunque haya error — mostrar confirmación igual
+        document.getElementById("form-wrapper").style.display = "none";
+        document.getElementById("form-success").classList.add("visible");
+      });
     }
   </script>
 
