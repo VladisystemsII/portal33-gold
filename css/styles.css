@@ -833,6 +833,12 @@ h1.blog-title {
   border-bottom: 1px solid var(--color-border);
 }
 
+#blogTable td:first-child {
+  font-weight: 700;
+  color: #111;
+  font-size: 0.95rem;
+}
+
 .blog-container {
   min-height: calc(100vh - var(--header-height));
   background: var(--color-ivory);
@@ -1218,16 +1224,18 @@ button:focus-visible {
   }
   #blogTable th { display: none; }
   #blogTable td { padding: var(--spacing-xs) 0; }
-  #blogTable td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 4px;
-    color: var(--color-gray);
-  }
+#blogTable td::before {
+  content: attr(data-label);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+  color: var(--color-dark);
+}
+#blogTable td:first-child {
+  font-weight: 700;
+  color: var(--color-dark);
+  font-size: 1rem;
+}
 
   .info-grid { grid-template-columns: 1fr; gap: 24px; }
   .sidebar-contacto { position: static; margin-top: 20px; }
