@@ -10,16 +10,14 @@ function sanitize(str) {
 }
 
 async function loadBlogs() {
-  const loading = document.getElementById("loadingBlogs");
+  const loading   = document.getElementById("loadingBlogs");
   const tableBody = document.querySelector("#blogTable tbody");
 
   try {
     loading.style.display = "block";
 
     const response = await fetch(PORTAL33_CONFIG.BLOG_ENDPOINT);
-    if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
     tableBody.innerHTML = "";
@@ -41,6 +39,9 @@ async function loadBlogs() {
     }
 
     activos.forEach(post => {
+      const codigo = post["CÓDIGO"] || "";
+      const titulo = post["Título"] || post["Titulo"] || "Sin título";
+
       const fechaFormateada = new Date(post["Fecha"]).toLocaleDateString("es-CO", {
         year: "numeric",
         month: "long",
@@ -49,16 +50,22 @@ async function loadBlogs() {
 
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${sanitize(post["Título"] || post["Titulo"] || "")}</td>
-        <td>${sanitize(fechaFormateada)}</td>
-        <td>${sanitize(post["Resumen"])}</td>
-        <td>
-          <a href="articulo.html?codigo=${encodeURIComponent(post["CÓDIGO"])}"
+        <td data-label="Título">
+          <a href="articulo.html?codigo=${encodeURIComponent(codigo)}"
+             style="color:inherit; text-decoration:none; font-weight:700;">
+            ${sanitize(titulo)}
+          </a>
+        </td>
+        <td data-label="Fecha">${sanitize(fechaFormateada)}</td>
+        <td data-label="Resumen">${sanitize(post["Resumen"])}</td>
+        <td data-label="Leer Más">
+          <a href="articulo.html?codigo=${encodeURIComponent(codigo)}"
              class="readMoreBtn">
             Leer Más
           </a>
         </td>
       `;
+
       tableBody.appendChild(row);
     });
 

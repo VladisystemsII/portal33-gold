@@ -1,5 +1,6 @@
 // detalle-propiedad.js — Lógica de carga del detalle de una propiedad
 // Dependencia: config.js debe cargarse antes que este script.
+// Dependencia: marked.js debe cargarse antes que este script.
 // Recibe ?codigo=XXXX desde la URL — mismo patrón que articulo.js
 
 // ===== NORMALIZAR URLs DE GOOGLE DRIVE =====
@@ -21,21 +22,16 @@ function extraerFileId(url) {
 
 function normalizarFoto(url) {
   if (!url || url.trim() === '') return null;
-
-  // Extraer fileId de cualquier formato de URL de Drive
   const fileId = extraerFileId(url);
   if (fileId) {
-    // thumbnail es el formato que funciona como imagen en todos los dispositivos
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
   }
-
-  // Si no es Drive, retornar URL original
   return url;
 }
 
 // ===== CARGA PRINCIPAL =====
 async function cargarPropiedad() {
-  const mensajeCarga      = document.getElementById('mensajeCarga');
+  const mensajeCarga       = document.getElementById('mensajeCarga');
   const contenidoPropiedad = document.getElementById('contenidoPropiedad');
 
   const params = new URLSearchParams(window.location.search);
@@ -77,8 +73,12 @@ async function cargarPropiedad() {
 
 // ===== RENDERIZAR =====
 function renderizarPropiedad(prop) {
-  // Título y ubicación
-  document.getElementById('propTitulo').textContent = prop["  Título  "] || "Sin título";
+
+  // Título — fallback limpio sin espacios
+  const titulo = prop["Título"] || prop["Titulo"] || "Sin título";
+  document.getElementById('propTitulo').textContent = titulo;
+
+  // Ubicación
   const ciudad = prop["Ciudad"] || "";
   const barrio = prop["Barrio/Sector"] || "";
   document.getElementById('propUbicacion').textContent =
@@ -95,24 +95,26 @@ function renderizarPropiedad(prop) {
   document.getElementById('propBanos').textContent        = prop["Baños"] || "0";
   document.getElementById('propParqueaderos').textContent = prop["Parqueaderos"] || "0";
 
-  // Descripción
-  document.getElementById('propDescripcion').textContent =
-    prop["Descripción"] || "Sin descripción disponible.";
+  // Descripción — Markdown → HTML
+  const descripcion = prop["Descripción"] || prop["Descripcion"] || "";
+  document.getElementById('propDescripcion').innerHTML = descripcion.trim()
+    ? marked.parse(descripcion)
+    : "<p>Sin descripción disponible.</p>";
 
   // Precios
-  const estado      = prop["Estado"] || "";
-  const pVenta      = prop["Precio Venta COP"] || "";
-  const pArriendo   = prop["Precio Arriendo COP"] || "";
+  const estado    = prop["Estado"] || "";
+  const pVenta    = prop["Precio Venta COP"] || "";
+  const pArriendo = prop["Precio Arriendo COP"] || "";
 
   if (estado.includes("Venta") && pVenta) {
-    document.getElementById('propPrecioVenta').textContent  = pVenta;
-    document.getElementById('propEstadoVenta').textContent  = "Precio de venta";
+    document.getElementById('propPrecioVenta').textContent = pVenta;
+    document.getElementById('propEstadoVenta').textContent = "Precio de venta";
   } else if (estado.includes("Arriendo") && pArriendo) {
-    document.getElementById('propPrecioVenta').textContent  = pArriendo;
-    document.getElementById('propEstadoVenta').textContent  = "Precio de arriendo";
+    document.getElementById('propPrecioVenta').textContent = pArriendo;
+    document.getElementById('propEstadoVenta').textContent = "Precio de arriendo";
   } else {
-    document.getElementById('propPrecioVenta').textContent  = "Consultar";
-    document.getElementById('propEstadoVenta').textContent  = "";
+    document.getElementById('propPrecioVenta').textContent = "Consultar";
+    document.getElementById('propEstadoVenta').textContent = "";
   }
 
   if (estado.includes("Venta") && estado.includes("Arriendo") && pArriendo) {
@@ -128,11 +130,10 @@ function renderizarPropiedad(prop) {
   // Galería
   cargarGaleria(prop);
 
-  // WhatsApp
+  // WhatsApp — título limpio
   document.getElementById('btnWhatsapp').onclick = () => {
-    const titulo   = prop["  Título  "] || "esta propiedad";
-    const codProp  = prop["CÓDIGO"] || "";
-    const mensaje  = `Hola! Estoy interesado en la propiedad *${codProp}*: ${titulo}`;
+    const codProp = prop["CÓDIGO"] || "";
+    const mensaje = `Hola! Estoy interesado en la propiedad *${codProp}*: ${titulo}`;
     window.open(
       `https://wa.me/${PORTAL33_CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`,
       '_blank'

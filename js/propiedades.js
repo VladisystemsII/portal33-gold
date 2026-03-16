@@ -77,7 +77,7 @@ async function loadPropiedades() {
       }
 
       const codigo  = prop["CÓDIGO"] || "";
-      const titulo  = prop["  Título  "] || "Sin título";
+      const titulo  = prop["Título"] || prop["Titulo"] || "Sin título";
       const ciudad  = prop["Ciudad"] || "";
       const barrio  = prop["Barrio/Sector"] || "";
       const tipo    = prop["Tipo"] || "";
