@@ -68,7 +68,7 @@ async function loadPropiedades() {
     activas.forEach(prop => {
       // Primera foto disponible
       let fotoSrc = 'img/sin-imagen.png';
-      for (let i = 1; i <= 8; i++) {
+      for (let i = 1; i <= 9; i++) {
         const url = prop[`Foto ${i}`];
         if (url && url.trim() !== '') {
           const normalizada = normalizarFoto(url);

@@ -145,7 +145,7 @@ function renderizarPropiedad(prop) {
 function cargarGaleria(prop) {
   const fotosArray = [];
 
-  for (let i = 1; i <= 8; i++) {
+  for (let i = 1; i <= 9; i++) {
     const url = prop[`Foto ${i}`];
     if (!url || url.trim() === '') continue;
     const normalizada = normalizarFoto(url);
