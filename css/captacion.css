@@ -1,24 +1,25 @@
 /* =======================================
-   NOTIFICACIONES CSS — Portal33 GOLD
+   CAPTACIÓN CSS — Portal33 GOLD
    Usa variables de styles.css (Gold)
    Tipografía: Cormorant Garamond + DM Sans
    Paleta: Marfil · Tinta · Dorado
    ======================================= */
 
-.notificaciones-page {
+/* ── Página contenedora ── */
+.captacion-page {
   min-height: calc(100vh - var(--header-height));
   background: var(--color-ivory);
   padding: 60px 20px 80px;
 }
 
 /* ── Hero ── */
-.notif-hero {
+.captacion-hero {
   max-width: 700px;
   margin: 0 auto 56px;
   text-align: center;
 }
 
-.notif-eyebrow {
+.captacion-eyebrow {
   display: inline-block;
   font-family: var(--font-body);
   font-size: 0.75rem;
@@ -33,7 +34,7 @@
   background: var(--color-white);
 }
 
-.notif-hero h1 {
+.captacion-hero h1 {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: 400;
@@ -44,7 +45,7 @@
   letter-spacing: 0.01em;
 }
 
-.notif-hero p {
+.captacion-hero p {
   font-family: var(--font-body);
   font-size: 1rem;
   color: var(--color-gray);
@@ -128,7 +129,9 @@
   margin-bottom: 20px;
 }
 
-.form-row.full { grid-template-columns: 1fr; }
+.form-row.full {
+  grid-template-columns: 1fr;
+}
 
 /* ── Campos ── */
 .form-field {
@@ -187,8 +190,14 @@
   flex-wrap: wrap;
 }
 
-.radio-option { flex: 1; min-width: 90px; }
-.radio-option input[type="radio"] { display: none; }
+.radio-option {
+  flex: 1;
+  min-width: 90px;
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
 
 .radio-option label {
   display: block;
@@ -262,6 +271,7 @@
   background: var(--color-gold);
   border-color: var(--color-gold);
   color: var(--color-ink);
+  transform: none;
   box-shadow: var(--shadow-md);
 }
 
@@ -269,10 +279,17 @@
   background: var(--color-gray);
   border-color: var(--color-gray);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.btn-arrow { transition: transform 0.2s ease; }
-.btn-submit:hover .btn-arrow { transform: translateX(4px); }
+.btn-arrow {
+  transition: transform 0.2s ease;
+}
+
+.btn-submit:hover .btn-arrow {
+  transform: translateX(4px);
+}
 
 /* ── Confirmación ── */
 .form-success {
@@ -282,7 +299,9 @@
   animation: fadeInUp 0.5s ease;
 }
 
-.form-success.visible { display: block; }
+.form-success.visible {
+  display: block;
+}
 
 .success-icon {
   width: 64px;
@@ -336,6 +355,7 @@
 .btn-volver-inicio:hover {
   background: var(--color-gold);
   color: var(--color-ink);
+  border-color: var(--color-gold);
 }
 
 @keyframes fadeInUp {
@@ -343,6 +363,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Disclaimer ── */
 .form-disclaimer {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -353,8 +374,58 @@
   font-weight: 300;
 }
 
+/* ── Notificaciones — hero ── */
+.notificaciones-page {
+  min-height: calc(100vh - var(--header-height));
+  background: var(--color-ivory);
+  padding: 60px 20px 80px;
+}
+
+.notif-hero {
+  max-width: 700px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.notif-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gray);
+  margin-bottom: 18px;
+  padding: 6px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: var(--color-white);
+}
+
+.notif-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.15;
+  margin-bottom: 18px;
+  letter-spacing: 0.01em;
+}
+
+.notif-hero p {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-gray);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
+  .captacion-page,
   .notificaciones-page { padding: 40px 16px 60px; }
   .pasos-grid { grid-template-columns: repeat(2, 1fr); }
   .form-card { padding: 32px 24px; }
