@@ -235,6 +235,8 @@ header::after {
   text-transform: uppercase;
   border-radius: 0;
   transition: all 0.35s ease;
+  position: relative;  /* ← agrega esto */
+  z-index: 1;          /* ← agrega esto */
 }
 
 #publicar a:hover {
