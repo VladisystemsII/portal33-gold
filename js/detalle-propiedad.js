@@ -1,7 +1,4 @@
 // detalle-propiedad.js — Lógica de carga del detalle de una propiedad
-// Dependencia: config.js debe cargarse antes que este script.
-// Dependencia: marked.js debe cargarse antes que este script.
-// Recibe ?codigo=XXXX desde la URL — mismo patrón que articulo.js
 
 // ===== NORMALIZAR URLs DE GOOGLE DRIVE =====
 function extraerFileId(url) {
@@ -29,9 +26,16 @@ function normalizarFoto(url) {
   return url;
 }
 
+// ===== ALT AUTOMÁTICO =====
+function generarAlt(prop, index = 0) {
+  const titulo = (prop && (prop["Título"] || prop["Titulo"])) || "Propiedad";
+  const codigo = (prop && prop["CÓDIGO"]) || "SIN-CODIGO";
+  return `${titulo} - ${codigo} - Foto ${index + 1}`;
+}
+
 // ===== CARGA PRINCIPAL =====
 async function cargarPropiedad() {
-  const mensajeCarga       = document.getElementById('mensajeCarga');
+  const mensajeCarga = document.getElementById('mensajeCarga');
   const contenidoPropiedad = document.getElementById('contenidoPropiedad');
 
   const params = new URLSearchParams(window.location.search);
@@ -62,6 +66,7 @@ async function cargarPropiedad() {
     }
 
     renderizarPropiedad(propiedad);
+
     mensajeCarga.style.display = 'none';
     contenidoPropiedad.style.display = 'block';
 
@@ -74,36 +79,30 @@ async function cargarPropiedad() {
 // ===== RENDERIZAR =====
 function renderizarPropiedad(prop) {
 
-  // Título — fallback limpio sin espacios
   const titulo = prop["Título"] || prop["Titulo"] || "Sin título";
   document.getElementById('propTitulo').textContent = titulo;
 
-  // Ubicación
   const ciudad = prop["Ciudad"] || "";
   const barrio = prop["Barrio/Sector"] || "";
   document.getElementById('propUbicacion').textContent =
     `${ciudad}${barrio ? ', ' + barrio : ''}`;
 
-  // Tipo
   const tipo = prop["Tipo"] || "Propiedad";
   const clasificacion = prop["Residencial / Comercial"] || "";
-  document.getElementById('propTipo').textContent = `${tipo} ${clasificacion}`.trim();
+  document.getElementById('propTipo').textContent =
+    `${tipo} ${clasificacion}`.trim();
 
-  // Características
-  document.getElementById('propArea').textContent         = prop["Área m2"] || "0";
+  document.getElementById('propArea').textContent = prop["Área m2"] || "0";
   document.getElementById('propHabitaciones').textContent = prop["Habitaciones"] || "0";
-  document.getElementById('propBanos').textContent        = prop["Baños"] || "0";
+  document.getElementById('propBanos').textContent = prop["Baños"] || "0";
   document.getElementById('propParqueaderos').textContent = prop["Parqueaderos"] || "0";
 
-  // Descripción — Markdown → HTML
   const descripcion = prop["Descripción"] || prop["Descripcion"] || "";
-  document.getElementById('propDescripcion').innerHTML = descripcion.trim()
-    ? marked.parse(descripcion)
-    : "<p>Sin descripción disponible.</p>";
+  document.getElementById('propDescripcion').innerHTML =
+    descripcion.trim() ? marked.parse(descripcion) : "<p>Sin descripción disponible.</p>";
 
-  // Precios
-  const estado    = prop["Estado"] || "";
-  const pVenta    = prop["Precio Venta COP"] || "";
+  const estado = prop["Estado"] || "";
+  const pVenta = prop["Precio Venta COP"] || "";
   const pArriendo = prop["Precio Arriendo COP"] || "";
 
   if (estado.includes("Venta") && pVenta) {
@@ -117,23 +116,16 @@ function renderizarPropiedad(prop) {
     document.getElementById('propEstadoVenta').textContent = "";
   }
 
-  if (estado.includes("Venta") && estado.includes("Arriendo") && pArriendo) {
-    document.getElementById('precioArriendoBox').style.display = 'block';
-    document.getElementById('propPrecioArriendo').textContent  = pArriendo;
-  }
-
-  // Detalles extra
-  document.getElementById('propEstrato').textContent        = prop["Estrato"] || "-";
+  document.getElementById('propEstrato').textContent = prop["Estrato"] || "-";
   document.getElementById('propAdministracion').textContent = prop["Administración"] || "-";
-  document.getElementById('propClasificacion').textContent  = prop["Residencial / Comercial"] || "-";
+  document.getElementById('propClasificacion').textContent = prop["Residencial / Comercial"] || "-";
 
-  // Galería
   cargarGaleria(prop);
 
-  // WhatsApp — título limpio
   document.getElementById('btnWhatsapp').onclick = () => {
     const codProp = prop["CÓDIGO"] || "";
     const mensaje = `Hola! Estoy interesado en la propiedad *${codProp}*: ${titulo}`;
+
     window.open(
       `https://wa.me/${PORTAL33_CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`,
       '_blank'
@@ -148,6 +140,7 @@ function cargarGaleria(prop) {
   for (let i = 1; i <= 9; i++) {
     const url = prop[`Foto ${i}`];
     if (!url || url.trim() === '') continue;
+
     const normalizada = normalizarFoto(url);
     if (normalizada) fotosArray.push(normalizada);
   }
@@ -156,45 +149,51 @@ function cargarGaleria(prop) {
     fotosArray.push('img/sin-imagen.png');
   }
 
-  // Foto principal
   const imgPrincipal = document.getElementById('imgPrincipal');
-  imgPrincipal.src = optimizarImagen(fotosArray[0]);
-  imgPrincipal.onerror = function () { this.src = 'img/sin-imagen.png'; };
+  imgPrincipal.src = fotosArray[0];
+  imgPrincipal.alt = generarAlt(prop, 0);
 
-  // Thumbnails
+  imgPrincipal.onerror = function () {
+    this.src = 'img/sin-imagen.png';
+  };
+
   const thumbnailsContainer = document.getElementById('thumbnailsContainer');
   thumbnailsContainer.innerHTML = '';
 
   fotosArray.forEach((foto, index) => {
-  const thumbnail = document.createElement('div');
-  thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
 
-  const img = document.createElement('img');
+    const thumbnail = document.createElement('div');
+    thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
 
-  // 👇 NO carga imagen aún (lazy real)
-  img.dataset.src = foto;
-  img.alt = `Foto ${index + 1}`;
-  img.loading = 'lazy';
+    const img = document.createElement('img');
 
-  img.onerror = function () {
-    this.src = 'img/sin-imagen.png';
-  };
+    // ✔ CORRECTO: cargar imagen visible
+    img.src = foto;
 
-  thumbnail.appendChild(img);
+    // ALT automático
+    img.alt = generarAlt(prop, index);
+    img.loading = 'lazy';
 
-  thumbnail.addEventListener('click', () => {
-    const main = document.getElementById('imgPrincipal');
-    main.src = optimizarImagen(foto);
+    img.onerror = function () {
+      this.src = 'img/sin-imagen.png';
+    };
 
-    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-    thumbnail.classList.add('active');
+    thumbnail.appendChild(img);
+
+    thumbnail.addEventListener('click', () => {
+      const main = document.getElementById('imgPrincipal');
+      main.src = foto;
+      main.alt = generarAlt(prop, index);
+
+      document.querySelectorAll('.thumbnail')
+        .forEach(t => t.classList.remove('active'));
+
+      thumbnail.classList.add('active');
+    });
+
+    thumbnailsContainer.appendChild(thumbnail);
   });
-
-
-  
-
-  thumbnailsContainer.appendChild(thumbnail);
-});
+}
 
 // ===== ERROR =====
 function mostrarError(mensaje) {
@@ -202,8 +201,7 @@ function mostrarError(mensaje) {
     <div class="mensaje-error">
       <h2>⚠️ ${mensaje}</h2>
       <p>La propiedad que buscas no está disponible.</p>
-      <a href="propiedades.html" class="btn-volver"
-         style="display:inline-flex; position:static; margin:20px auto 0;">
+      <a href="propiedades.html" class="btn-volver">
         ← Volver al listado
       </a>
     </div>
