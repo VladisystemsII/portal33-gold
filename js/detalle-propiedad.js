@@ -158,7 +158,7 @@ function cargarGaleria(prop) {
 
   // Foto principal
   const imgPrincipal = document.getElementById('imgPrincipal');
-  imgPrincipal.src = fotosArray[0];
+  imgPrincipal.src = optimizarImagen(fotosArray[0]);
   imgPrincipal.onerror = function () { this.src = 'img/sin-imagen.png'; };
 
   // Thumbnails
@@ -166,26 +166,35 @@ function cargarGaleria(prop) {
   thumbnailsContainer.innerHTML = '';
 
   fotosArray.forEach((foto, index) => {
-    const thumbnail = document.createElement('div');
-    thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+  const thumbnail = document.createElement('div');
+  thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
 
-    const img = document.createElement('img');
-    img.src     = foto;
-    img.alt     = `Foto ${index + 1}`;
-    img.loading = 'lazy';
-    img.onerror = function () { this.src = 'img/sin-imagen.png'; };
+  const img = document.createElement('img');
 
-    thumbnail.appendChild(img);
+  // 👇 NO carga imagen aún (lazy real)
+  img.dataset.src = foto;
+  img.alt = `Foto ${index + 1}`;
+  img.loading = 'lazy';
 
-    thumbnail.addEventListener('click', () => {
-      document.getElementById('imgPrincipal').src = foto;
-      document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-      thumbnail.classList.add('active');
-    });
+  img.onerror = function () {
+    this.src = 'img/sin-imagen.png';
+  };
 
-    thumbnailsContainer.appendChild(thumbnail);
+  thumbnail.appendChild(img);
+
+  thumbnail.addEventListener('click', () => {
+    const main = document.getElementById('imgPrincipal');
+    main.src = optimizarImagen(foto);
+
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    thumbnail.classList.add('active');
   });
-}
+
+
+  
+
+  thumbnailsContainer.appendChild(thumbnail);
+});
 
 // ===== ERROR =====
 function mostrarError(mensaje) {
